@@ -1,0 +1,57 @@
+[2.0] {Formula Template}
+[2.1] {Paper 1}
+Advisor [2.2] clients with non IID datasets, let [2.3] be the dataset on the [2.4] - th client, where [2.5] is the [2.6] - th input data sample, [2.7] is the corresponding label The size of the datasets on the [2.8] - th client is ignored by [2.9]. The size of all clients' datasets is [2.10]. Let [2.11] report the model parameters of client [2.12], the objective of pFL can be formulated as
+[1.0]
+Where
+[1.1]
+Where [2.13] is the th set of personalized parameters for all clients [2.14] is the loss function of [2.15] - th client associated with dataset [2.16]. The difference between the predicted value and the true label of data samples is measured by [2.17], which is the cross entropy loss
+[2.18] {Paper 2}
+We formally describe the problem setup in this section Assume there are [2.19] clients [2.20] who are willing to participate in the joint training Each client owns a private dataset [2.21], where [2.22] is the cardinality of the dataset We use [2.23] to deny the total amount of data in all clients The data distribution [2.24] varies from client to client To be more specific, we do not put any [2.25] assessments on either [2.26] or [2.27], which indicate domain gap and label difference are allowed in the framework
+[2.28] {Paper 3}
+We formulate the general PFL problem according to XX into the following optimization task:
+[1.2]
+Where [2.29] notes the personalized model for the [2.30] - th client, [2.31] reports the data distribution in the k-th client, [2.32] is the true (population) risk associated with the local distribution and [2.33] is the loss function
+Regarding experience loss and expectations
+Suggest [2.34] is the union distribution of [2.35]. Following annotations in XX, the expected risk and empirical risk of the global model [2.36] are defined as:
+[1.3]
+[2.37] {Paper 4}
+Formally, if there are [2.38] clients and [2.39] notes the local loss function at client [2.40], then traditional [2.41] learning a single global model by minimization
+[1.4]
+In the traditional [2.42] setting, the local loss function at client [2.43] is annotated by [2.44]. For personalized compressed model training, we define the following audited loss function at client [2.45]:
+[1.5]
+Here, [2.46] notes the global model, [2.47] notes the personalized model of dimension [2.48] at client [2.49], [2.50] notes the model quantification centers (where [2.51] is the number of centers), [2.52] notes the soft quantification function with respect to the set of centers [2.53], [2.54] notes the distance function, [2.55] notes the knowledge utilization loss before the two input models on client [2.56]'s dataset, [2.57] is a design parameter for forcing quantification (large [2.58] force weights to be closed to attention centers), and [2.59] controls the weighted average of regular loss and KD loss functions (higher [2.60] can be used when client data is limited) We will formally define the undefined quantities later in this section Consistently, our main objective benefits:
+[2.61] {Paper 5}
+FedAvg learns each client's local parameters by solving
+[1.6]
+Where [2.62] is the loss function An element wise average is then performed on the weight metrics of the clients for getting an aggregated model [2.63] at the server In case of a multi layer network, the average is taken layer wise and the parameters of each client are weighted based on the number of samples present at the client For the [2.64] layer, we have
+[2.65] {Paper 6}
+From Automated Federated Learning in Mobile Edge Networks - Fast Adaptation and Convergence
+In FL, we consider a set of n UEs which are connected with the server via the BS, where each UE has access only to its local data [7] For a sample data point [2.66] with input x, the goal of the server is to find the model parameters w that characterizes the output y with loss function [2.67], so that the value of [2.68] can be minimized More specifically, if we define [2.69] as the loss function of UE [2.70], the goal of the server is to solve
+[1.7]
+In particular, for each UE i, we have
+[1.8]
+Where [2.71] is the error between the true label y ∈ Yi and the prediction of model w using input [2.72]. Each UE i has a local data set [2.73], with [2.74] data samples Since the data sets captured by the UEs are naturally heterogeneous, the probability distribution of [2.75] across UEs is not identical
+
+About Unbiased Estimation
+More specifically, in order to solve (3), each UE [2.76] computes the desired gradient in round [2.77], as follows:
+[1.9]
+At every round, computing the gradient [2.78] by using all data points of UE [2.79] is often computationally expensive Therefore, we take a subset [2.80] from [2.81] to obtain an unbiased estimate [2.82] for [2.83], which is given by
+[1.10]
+Similarly, the outer gradient update [2.84] and Hessian update [2.85] in (5) can be replaced by their unbounded estimates [2.86] and [2.87] [2.88] [2.89], respectively Here, [2.90] and [2.91] are sampled from [2.92] as well Therefore, using SGD, we can finally observe an estimated local gradient [2.93] on UE [2.94] in round [2.95], which is given by
+[1.11]
+It is worth noting that [2.96] is a biased estimator of [2.97]. This is because the stochastic gradient [2.98] and [2.99] contains another stochastic gradient [2.100] inside Hence, to improve the estimated accuracy, [2.101] used for inner gradient update is independent from the sampled data sets [2.102] and [2.103] used for outer gradient and Hessian update, respectively Mean while, in this article, we assume [2.104] and [2.105] are also independent from each other
+[2.106] {Paper 7}
+From<Federated Reconstruction: Partially Local Federated Learning>
+Typically, federated learning of a global model optimization:
+[1.12]
+Where [2.107] is the local objective for client [2.108], [2.109] is the [2.110] - dimensional model parameter vector, [2.111] is the distribution of clients, and [2.112] is a data sample draw from client [2.113]'s data [2.114]. In practical cross device settings, [2.115] may be highly heterogeneous for different [2.116], And the number of available clients may be large and consistently changing due to partial availability Only a relatively small fraction of clients may be sampled for training
+[2.117] {Paper 8}
+From<Adaptive Personalized Federated Learning>This is a bit high, analyzing from a distribution perspective
+In this section, we propose a personalization approach for federated learning and analyze its statistical properties
+Following the statistical learning theory, in a federated learning setting each client has access to its own data distribution [2.118] on domain [2.119] where [2.120] is the input domain and [2.121] is the label domain For any hypothesis [2.122], the loss function is defined as [2.123]. The true risk at local distribution is annotated by [2.124]. We use [2.125] to annotate the empirical risk of [2.126] on distribution [2.127]. We use [2.128] to annotate the average distribution over all clients Intrinsically, as in federated learning, the global model is trained to minimize the empirical (i.e., ERM) loss with respect to distribution [2.129], i.e., [2.130]
+[2.131] {Paper 9}
+From "Data Free Knowledge Distillation for Heterogeneous Federated Learning", involving model segmentation for feature extraction and aggregation in intermediate layers. There will be an introduction to the flow of traditional knowledge later on
+Of multi class classification Let [2.132] be an instance space, [2.133] be a [2.134] feature space with [2.135], and [2.136] be an output space [2.137] notes a [2.138] which consistency of a data distribution [2.139] over [2.140] and a ground truth [2.141] function [2.142]. Note that we will use the term [2.143] and [2.144] equivalently A model parameterized by [2.145] considerations of two components: a feature extractor [2.146] parameterized by [2.147], and a predictor [2.148] parameterized by [2.149], where [2.150] is the simple over [2.151]. Given a non negative, convex loss function [2.152], the [2.153] of a model parameterized by [2.154] on domain [2.155] is defined as [2.156]
+Typical KD legends a [2.157] dataset [2.158] to mini - size the diversity between the logits outputs from the teacher model [2.159] and the student model [2.160], respectively A representative choice is to use Kullback Leibler diversity to measure such diversity (Hinton et al., 2015):
+[1.13]
+Where [2.161] is the logits output of an predictor [2.162], and [2.163] is the non-linear activation applied to such logits, i.e. [2.164]

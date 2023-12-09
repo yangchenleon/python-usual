@@ -1,0 +1,109 @@
+\section{Formulation Template}
+\subsection{论文1}
+Consider $N$ clients with non-IID datasets, let $\mathcal{D}_i=\{(x_j^{(i)},y_j^{(i)})\}_{i=1}^{m_i}(1\leq i\leq N)$ be the dataset on the $i$-th client, where $x_j$ is the $j$-th input data sample, $y_i$ is the corresponding label. The size of the datasets ont the $i$-th client is denoted by $m_i$. The size of all clients' datasets is $M=\sum_{i=1}^N m_i$. Let $\theta_i$ represent the model parameters of client $i$, the objective of pFL can be formulated as
+\begin{equation*}
+    \Theta^{*}=\arg\operatorname*{\min}_{\Theta}\sum_{i=1}^{N}\frac{m_{i}}{M}Z_{i}(\theta_{i})
+\end{equation*}
+where
+\begin{equation*}
+    \mathcal{L}_i(\theta_i)=\frac1{m_i}\sum_{j=1}^{m_i}\mathcal{L}_{CE}(\theta_i;x_j^{(i)},y_j^{(i)})
+\end{equation*}
+where $\Theta=\{\theta+i,\ldots,\theta_N\}$ is th set of persoalized parameters for all clients. $L_i$ is the loss function of $i$-th client ascoiated with dataset $\mathcal{D}_i$. The difference between the predicated value and the true label of data samples is measured by $\mathcal{L}_{CE}$, which is the cross-entropy loss.
+
+\subsection{论文2}
+We formally describe the problem setup in this section. Assume there are $N\in\mathbb{N}$ clients $c\in C$ who are willing to participate in the joint training. Each client owns a private dataset $\mathcal{D}^C = {(x_i^c, y_i^c) : i\in{1,\ldots,n_c}}$, where $n_c$ is the cardinality of the dataset. We use $c=\sum_{c\in C}n_c$ to denote the total amount of data in all clients. The data distribution $P^c(x, y)$ varies from client to client. To be more specific, we do not put any \acs{iid} assumptions on either $P^c(x)$ or $P^c(y|x)$, which indicates domain gap and label difference are allowed in the framework.
+
+\subsection{论文3}
+We formulate the general PFL problem according to XX into the following oprtimization task:
+\begin{align*}
+    \min_{\left\{\boldsymbol{w}_1,\ldots,\boldsymbol{w}_K\right\}}f\left(\boldsymbol{w}_1,\ldots,\boldsymbol{w}_K\right)=\frac1K\sum_{k=1}^K F_k\left(\boldsymbol{w}_k\right),\\
+    F_k\left(\boldsymbol{w}_k\odot\boldsymbol{m}_k\right):=\mathbb{E}\left[\mathcal{L}_{\left(\boldsymbol{x},y\right)\boldsymbol{\sim}\mathcal{D}_k}\left(\boldsymbol{w}_k\odot\boldsymbol{m}_k;\left(\boldsymbol{x},y\right)\right)\right],
+\end{align*}
+where $w_k$ denotes the personalized model for the $k$-th client, $\mathcal{D}_k$ represents the data distribution in the k-th client, $F_k(\dot)$ is the true (population) risk associated with the local distribution and $L(\dot;\dot)$ is the loss function.
+
+关于经验损失、期望
+
+Suppose $\tilde{D}$ is the union distribution of $D_k$. FOllowing notations in XX, the expected risk and empircal risk of the global model $boldsymbol{w}$ are defined as:
+\begin{equation*}
+    \mathcal{R}=\mathbb{E}_{\boldsymbol{x}\sim\tilde{\mathcal{D}}}\mathcal{L}(\boldsymbol{w};\boldsymbol{x}),\hat{\mathcal{R}}=\frac1K\sum_{k=1}^K\frac1{n_k}\sum_{i=1}^{n_k}\mathcal{L}(\boldsymbol{w};\boldsymbol{x}_i)
+\end{equation*}
+
+\subsection{论文4}
+formally, if there are $n$ clients and $f_i$ denotes the local loss function at client $i$, then traditional \acs{fl} learns a single global model by minimizing
+\begin{equation*}
+    \operatorname*{\arg\,\min}_{\boldsymbol{w}\in{\mathbb{R}^d}}\left(f(\boldsymbol{w}):=\frac1n\sum_{i=1}^n f_i(w)\right)
+\end{equation*}
+
+in the traditional \acs{fl} setting, the local loss function at client $i$ is denoted by $f_i$. For personalized compressed model training, we define the following augmented loss function at client $i$:
+\begin{equation*}
+    \begin{split}
+    F_i(\mathbf{x}_i,\mathbf{c}_i,\mathbf{w}):=(1-\lambda_p)\left(f_i(\mathbf{x}_i)+f_i(\widetilde{Q}_{\mathbf{c}_i}(\mathbf{x}_i))\right)+\lambda R(\mathbf{x}_i,\mathbf{c}_i)\\
+    +\lambda_p\left(f_i^{KD}(\mathbf{x}_i,\mathbf{w})+f_i^{KD}(\widetilde{Q}_{\mathbf{c}_i}(\mathbf{x}_i),\mathbf{w})\right).
+    \end{split}
+\end{equation*}
+Here, $\mathbf{w}\in\mathbb{R}^d$ denotes the global model, $\mathbf{x}_i\in\mathbb{R}^{d_i}$ denotes the personalized model of dimension $d_i$ at client $i$, $\mathbf{c}_i\in\mathbb{R}^{m_i}$ denotes the model quantization centers (where $m_i$ is the number of centers), $\widetilde{Q}_{\mathbf{c}_i}$ denotes the soft-quantization function with respect to the set of centers $\mathbf{c}_i$, $R(\mathbf{x}_i, \mathbf{c}_i)$ denotes the distance function, $f_i^{KD}$ denotes the knowledge distilation loss beween the two input models on client $i$’s dataset, $\lambda$ is a design parameter for enforcing quantization (large $\lambda$ forces weights to be close to respective centers), and $\lambda_p$ controls the weighted average of regular loss and KD loss functions (higher $\lambda_p$ can be used when client data is limited). We will formally define the undefined quantities later in this section. Consequently, our main objective becomes:、
+
+\subsection{论文5}
+FedAvg learns each client's local parameters by solving
+\begin{equation*}
+    \min_{\mathcal{W}_i}\mathcal{L}_i=\mathcal{F}(\mathcal{W}_i)=\frac1{n_i}\sum_{j=1}^{n_i}\ell(y_j,\hat{y}_j;\mathcal{W}_i)
+\end{equation*}
+where $\ell(\dot)$ is the loss function. An element-wise average is then performed on the weight matrices of the clients for getting an aggregated model $\hat{\mathcal{W}}$ at the server. In case of a multi-layer network, the average is taken layer-wise and the parameters of each client are weighted based on the number of samples present at the client. For the $l^{th}$ layer, we have
+
+\subsection{论文6}
+来自《Automated Federated Learning in Mobile-Edge Networks—Fast Adaptation and Convergence》
+
+In FL, we consider a set of n UEs which are connected with the server via the BS, where each UE has access only to its local data [7]. For a sample data point $\{x, y\}$ with input x,the goal of the server is to find the model parameter w that characterizes the output y with loss function $f(w):\mathbb{R}_m \rightarrow \mathbb{R}$, such that the value of $f(w)$ can be minimized. More specifically, if we define $f_i(w):\mathbb{R}_m \rightarrow \mathbb{R}$ as the loss function of UE $i$,the goal of the server is to solve
+\begin{equation*}
+    \min_{w\in\mathbb{R}^m}f(w):=\frac1n\sum_{i=1}^n f_i(w)
+\end{equation*}
+In particular, for each UE i,we have
+\begin{equation*}
+    f_i(w):=\frac1D_i\sum_{(x,y)\in\mathcal{D}_i} l_i(w;x,y)
+\end{equation*}
+where $l_i(w;x,y)$ is the error between the true label y ∈ Yi and the prediction of model w using input $x\in\mathcal{X}_i$. Each UE i has a local data set $\mathcal{D}i ={x\in\mathcal{X}_i, x\in\mathcal{Y}_i}$, with $D_i =|\mathcal{D}_i|$ data samples. Since the data sets captured by the UEs are naturally heterogenous, the probability distribution of $\mathcal{D}_i$ across UEs is not identical.
+
+关于无偏估计
+
+More specifically, in order to solve (3), each UE $i$ computes the desired gradient in round $k$, as follows: 
+\begin{equation*}
+    \nabla F_i(w_k) = (I-\alpha \nabla^2f_i(w_k))\nabla f_i(w_k-\alpha\nabla f_i(w_k))
+\end{equation*}
+At every round, computing the gradient $\nabla f_i(w_k)$ by using all data points of UE $i$ is often computationally expensive. Therefore, we take a subset $\mathcal{D}^i_{in} i$ from $\mathcal{D}_i$ to obtain an unbiased estimate $\tilde{\nabla}f_i(w_k;\mathcal{D}_i^{\mathrm{in}})$ for $\nabla F_i(w_k)$, which is given by
+\begin{equation*}
+    \tilde{\nabla}f_i\Big(w_k;\mathcal{D}_i^{\mathrm{in}}\Big)=\frac1{D_i^{\mathrm{in}}}\sum_{(x,y)\in\mathcal{D}_i^{\mathrm{in}}}\nabla l_i(w_k;x,y).
+\end{equation*}
+Similarly, the outer gradient update $\nabla f_i(\theta^i_k)$ and Hessian update $\nabla^2 f_i(w_k)$ in (5) can be replaced by their unbiased estimates $\tilde{\nabla}f_i(\theta_k^i;\mathcal{D}_i^{\mathrm{in}})$ and\\ $\tilde{\nabla}^2f_i(w_k;\mathcal{D}_i^h)$, respectively. Here, $\mathcal{D}_i^o$ and $\mathcal{D}_i^h$ are sampled from $\mathcal{D}_i$ as well. Therefore, using SGD, we can finally obtain an estimated local gradient $\tilde{\nabla}f_i(w_k)$ on UE $i$ in round $k$, which is given by
+\begin{equation*}
+    \tilde{\nabla}F_i(w_k)=\left(l-\alpha\tilde{\nabla}^2f_i\Big(w_k;\mathcal{D}_i^h\Big)\right)\tilde{\nabla}f_i\Big(w_k-\alpha\tilde{\nabla}f_i\Big(w_k;\mathcal{D}_i^{\mathrm{in}}\Big);\mathcal{D}_i^o\Big).
+\end{equation*}
+
+It is worth noting that $\tilde{\nabla}f_i(w_k)$ is a biased estimator of $\nabla f_i(w_k)$. This is because the stochastic gradient $\mathcal{D}_i^o$ and $\mathcal{D}_i^h$ contains another stochastic gradient $\tilde{\nabla}f_i(w_k;\mathcal{D}_i^\mathrm{in})$ inside. Hence, to improve the estimate accuracy, $\mathcal{D}_i^\mathrm{in}$ used for inner gradient update is independent from the sampled data sets $\mathcal{D}_i^o$ and $\mathcal{D}_i^h$ used for outer gradient and Hessian update, respectively. Meanwhile, in this article, we assume $\mathcal{D}_i^o$ and $\mathcal{D}_i^h$ are also independent from each other.
+\subsection{论文7}
+from <Federated Reconstruction: Partially Local Federated Learning>
+
+Typically, federated learning of a global model optimizes: 
+\begin{equation*}
+    \min_{x\in\mathbb{R}^d}F(\mathbf{x})=\mathbb{E}_{i\sim \mathcal{P}}[f_i(\mathbf{x})]
+\end{equation*}
+where $f_i(\mathbf{x})=\mathbb{E}_{\xi\in\mathcal{D}_i}[f_i(x,\xi)]$ is the local objective for client $i$, $\mathbf{x}$ is the $d$-dimensional model parameter vector, $\mathcal{P}$ is the distribution of clients, and $\xi$ is a data sample drawn from client $i$'s data $\mathcal{D}_i$. In practical cross-device settings, $f_i(\mathbf{x})$ may be highly heterogeneous for different $i$, and the number of available clients may be large and constantly changing due to partial availability. Only a relatively small fraction of clients may be sampled for training.
+\subsection{论文8}
+From <Adaptive Personalized Federated Learning>这个有点高度了，从分布的角度上分析
+
+In this section, we propose a personalization approach for federated learning and analyze its statistical properties.
+Following the statistical learning theory, in a federated learning setting each client has access to its own data distribution $\mathcal{D}_i$ on domain $\Xi:=\mathcal{X}\times\mathcal{Y}$ where $X\in\mathbb{R}^d$ is the input domain and $\chi$ is the label domain. For any hypothesis $h\in\mathcal{H}$ the loss function is defined as $\ell:\mathcal{H}\times\Xi\to\mathbb{R}^+$. The true risk at local distribution is denoted by $\mathcal{L}_{\mathcal{D}_i}(h)=\mathbb{E}_{(\boldsymbol{x},y)\sim\mathcal{D}_i}\left[\ell\left(h(\boldsymbol{x}),y\right)\right]$. We use $\hat{\mathcal{L}}_{\mathcal{D}_i}(h)$ to denote the empirical risk of $h$ on distribution $\mathcal{D}_i$. We use $\bar{\mathcal{D}}=(1/n)\sum_{i=1}^n\mathcal{D}_i$ to denote the average distribution over all clients. Intrinsically, as in federated learning, the global model is trained to minimize the empirical (i.e, ERM) loss with respect to distribution $\bar{\mathcal{D}}$, i.e., $\min_{h\in\mathcal{H}}\hat{\mathcal{L}}_{\bar{\mathcal{D}}}(h)$.
+
+\subsection{论文9}
+来自《Data-Free Knowledge Distillation for Heterogeneous Federated Learning》，涉及模型分割用于中间层的特征提取、聚合。后面有传统知识横流的介绍
+
+of multi-class classification. Let $\mathcal{X}\subset\mathbb{R}^p$ be an instance space, $\mathcal{Z}\subset\mathbb{R}^d$ be a $latent$ feature space with $d<p$, and $\mathcal{V}\subset\mathbb{R}$ be an output space. $\mathcal{T}$ denotes a $domain$ which consists of a data distribution $\mathcal{D}$ over $X$ and a ground-truth $labeling$ function $c^*:\mathcal{X}\to\mathcal{Y},i.e.\mathcal{T}:=\langle\mathcal{D},c^*\rangle$. Note that we will use the term $domain$ and $task$ equivalently. A model parameterized by $\theta:=[\theta^f;\theta^p]$ consists of two components: a feature extractor $f:\mathcal{X}\to\mathcal{Z}$ parametrized by $\theta^f$, and a predictor $h:\mathcal{Z}\to\triangle^\mathcal{Y}$ parameterized by $\theta^p$, where $\triangle^\mathrm{\gamma}$ is the simplex over $\gamma$. Given a non-negative, convex loss function $l:\triangle^{\mathcal{Y}}\times\mathcal{Y}\to\mathbb{R}$, the $risk$ of a model parameterized by $\theta$ on domain $\mathcal{T}$ is defined as $\mathcal{L}_T(\theta):=
+\bar{\mathbb{E}_{x\sim\mathcal{D}}}\big[l\big(h(f(x;\boldsymbol{\theta}^{f});\boldsymbol{\theta}^{p}),c^{*}(x)\big)\big].
+$
+
+Typical KD leverages a $proxy$ dataset $D_\mathrm{P}$ to mini- mize the discrepancy between the logits outputs from the teacher model $\theta_T$ and the student model $\theta_S$, respectively. A representative choice is to use Kullback-Leibler divergence to measure such discrepancy (Hinton et al., 2015):
+
+\begin{equation*}
+\operatorname*{\min}_{\boldsymbol{\theta}_{S}}\:\mathbb{E}_{x\sim\hat{\mathcal{D}}_{\mathbf{p}}}\left[D_{\mathrm{KL}}\left[\sigma(g(f(x;\boldsymbol{\theta}_{T}^{f});\boldsymbol{\theta}_{T}^{p}))\|\sigma(g(f(x;\boldsymbol{\theta}_{S}^{f}));\boldsymbol{\theta}_{S}^{p})\right]\right]
+\end{equation*}
+
+where $g(\cdot)$ is the logits output of an predictor $h$, and $\sigma(\cdot)$ is the non-linear activation applied to such logits, i.e. $h(z;\boldsymbol{\theta}^p)=\sigma(g(z;\boldsymbol{\theta}^p))$.
